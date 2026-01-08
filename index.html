@@ -1,90 +1,78 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <meta charset="UTF-8" />
-  <title>Cadastro de Serviço – Digitalização</title>
-  <link rel="stylesheet" href="css/style.css" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Protocolo NexVision</title>
+  <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
 
 <div class="container">
-  <h1>Cadastro Inicial do Serviço</h1>
 
-  <!-- ETAPA 1 -->
-  <div class="step active">
-    <label>
-      Nome completo:
-      <input type="text" id="nome" />
-    </label>
+  <h2>Preencha seus dados</h2>
 
-    <label>
-      WhatsApp <span class="hint">(DDD+Telefone)</span>
-      <input type="text" id="whatsapp" placeholder="11992109965" />
-    </label>
+  <form id="formProtocolo">
 
-    <button onclick="nextStep()">Próximo</button>
-  </div>
+    <div class="form-group">
+      <label for="nome">Nome</label>
+      <input type="text" id="nome" name="nome" placeholder="Seu nome completo" required>
+    </div>
 
-  <!-- ETAPA 2 -->
-  <div class="step">
-    <label>
-      Endereço:
-      <input type="text" id="endereco" />
-    </label>
+    <div class="form-group">
+      <label for="whatsapp">WhatsApp (DDD+Telefone)</label>
+      <input type="text" id="whatsapp" name="whatsapp" placeholder="Ex: 11921432425" required>
+    </div>
 
-    <label>
-      CEP (opcional):
-      <input type="text" id="cep" />
-    </label>
+    <div class="form-group">
+      <label for="email">E-mail</label>
+      <input type="email" id="email" name="email" placeholder="seu@email.com" required>
+    </div>
 
-    <label>
-      Complemento (casa, apartamento ou sem complemento):
-      <input type="text" id="complemento" />
-    </label>
+    <div class="form-group">
+      <label for="endereco">Endereço</label>
+      <input type="text" id="endereco" name="endereco" placeholder="Rua, número, bairro" required>
+    </div>
 
-    <button onclick="prevStep()">Voltar</button>
-    <button onclick="nextStep()">Próximo</button>
-  </div>
+    <div class="form-group">
+      <label for="complemento">Complemento (casa, apartamento ou sem complemento)</label>
+      <input type="text" id="complemento" name="complemento" placeholder="Digite seu complemento" required>
+    </div>
 
-  <!-- ETAPA 3 -->
-  <div class="step">
-    <fieldset>
-      <legend>Tipo de mídia (marque todas que se aplicam):</legend>
+    <div class="form-group">
+      <label>Tipos de fita</label>
+      <div class="checkbox-group">
+        <label><input type="checkbox" name="fitas" value="VHS"> VHS</label>
+        <label><input type="checkbox" name="fitas" value="VHS-C"> VHS-C</label>
+        <label><input type="checkbox" name="fitas" value="MiniDV"> MiniDV</label>
+        <label><input type="checkbox" name="fitas" value="Betacam"> Betacam</label>
+        <label><input type="checkbox" name="fitas" value="DVD"> DVD</label>
+        <label><input type="checkbox" name="fitas" value="Outro"> Outro</label>
+      </div>
+    </div>
 
-      <label><input type="checkbox" name="midia" value="VHS"> VHS</label>
-      <label><input type="checkbox" name="midia" value="VHS-C"> VHS-C</label>
-      <label><input type="checkbox" name="midia" value="MiniDV"> MiniDV</label>
-      <label><input type="checkbox" name="midia" value="Betacam"> Betacam</label>
-      <label><input type="checkbox" name="midia" value="DVD"> DVD</label>
-      <label><input type="checkbox" name="midia" value="Outro"> Outro</label>
-    </fieldset>
+    <div class="form-group">
+      <label for="quantidade">Quantidade de fitas</label>
+      <input type="number" id="quantidade" name="quantidade" min="1" required>
+    </div>
 
-    <label>
-      Quantidade de mídias:
-      <input type="number" id="quantidade" />
-    </label>
-
-    <label>
-      Condições das mídias:
-      <select id="condicoes">
+    <div class="form-group">
+      <label for="condicoes">Condições das fitas</label>
+      <select id="condicoes" name="condicoes" required>
         <option value="">Selecione</option>
+        <option value="Excelente">Excelente</option>
         <option value="Boa">Boa</option>
         <option value="Regular">Regular</option>
         <option value="Ruim">Ruim</option>
       </select>
-    </label>
+    </div>
 
-    <button onclick="prevStep()">Voltar</button>
-    <button onclick="finalizar()">Finalizar</button>
-  </div>
+    <button type="submit" id="btnEnviar">Enviar WhatsApp</button>
 
-  <!-- RESULTADO -->
-  <div class="step">
-    <h2>Cadastro concluído</h2>
-    <p id="resultado"></p>
-  </div>
+  </form>
+
 </div>
 
-<script src="js/script.js"></script>
+<script type="module" src="js/script.js"></script>
 </body>
 </html>

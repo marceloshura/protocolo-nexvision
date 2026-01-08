@@ -1,27 +1,27 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <meta charset="UTF-8" />
-  <title>Painel de Controle – Ordens de Serviço</title>
-  <link rel="stylesheet" href="css/style.css">
+  <meta charset="UTF-8">
+  <title>Painel de Controle - Protocolo</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="../css/style.css">
 </head>
 <body>
 
-<div class="container">
-  <h1>Painel de Ordens de Serviço</h1>
+<h2>Painel de Controle - Protocolo</h2>
 
-  <label>
-    Buscar por protocolo:
-    <input type="text" id="buscaProtocolo" placeholder="NX-2026-1234">
-  </label>
-  <button onclick="buscarOS()">Buscar</button>
+<label for="filtroStatus">Filtrar por status:</label>
+<select id="filtroStatus">
+  <option value="Todos">Todos</option>
+  <option value="Recebido">Recebido</option>
+  <option value="Em Andamento">Em Andamento</option>
+  <option value="Concluído">Concluído</option>
+</select>
 
-  <hr>
+<ul id="lista">
+  <!-- Protocolos do Firestore serão carregados aqui -->
+</ul>
 
-  <h2>Lista de OS</h2>
-  <div id="listaOS"></div>
-</div>
-
-<script src="js/controle.js"></script>
+<script type="module" src="./controle.js"></script>
 </body>
 </html>

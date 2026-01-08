@@ -1,73 +1,91 @@
-const listaOSDiv = document.getElementById("listaOS");
+import { db } from "../js/firebase.js";
+import { collection, getDocs, doc, updateDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
-function carregarOS() {
-  const lista = JSON.parse(localStorage.getItem("ordensServico")) || [];
-  listaOSDiv.innerHTML = "";
+const lista = document.getElementById("lista");
+const filtroStatus = document.getElementById("filtroStatus");
 
-  if (lista.length === 0) {
-    listaOSDiv.innerHTML = "<p>Nenhuma OS encontrada.</p>";
-    return;
+// Listener para filtro
+filtroStatus.addEventListener("change", () => {
+  carregarProtocolos(filtroStatus.value);
+});
+
+// Atualiza status no Firestore
+async function atualizarStatus(id, novoStatus) {
+  try {
+    const docRef = doc(db, "protocolos", id);
+    await updateDoc(docRef, { status: novoStatus });
+    carregarProtocolos(); // Atualiza a lista automaticamente
+  } catch (error) {
+    console.error("Erro ao atualizar status:", error);
   }
-
-  lista.forEach((os, index) => {
-    const div = document.createElement("div");
-    div.style.border = "1px solid #ccc";
-    div.style.padding = "10px";
-    div.style.marginBottom = "10px";
-
-    div.innerHTML = `
-      <strong>Protocolo:</strong> ${os.protocolo}<br>
-      <strong>Cliente:</strong> ${os.nome}<br>
-      <strong>WhatsApp:</strong> ${os.whatsapp}<br>
-      <strong>Mídias:</strong> ${os.midias.join(", ")}<br>
-      <strong>Quantidade:</strong> ${os.quantidade}<br>
-      <strong>Condições:</strong> ${os.condicoes}<br>
-      <strong>Status:</strong>
-      <select onchange="atualizarStatus(${index}, this.value)">
-        <option ${os.status === "Recebido" ? "selected" : ""}>Recebido</option>
-        <option ${os.status === "Em digitalização" ? "selected" : ""}>Em digitalização</option>
-        <option ${os.status === "Finalizado" ? "selected" : ""}>Finalizado</option>
-      </select>
-    `;
-
-    listaOSDiv.appendChild(div);
-  });
 }
 
-function atualizarStatus(index, novoStatus) {
-  const lista = JSON.parse(localStorage.getItem("ordensServico")) || [];
-  lista[index].status = novoStatus;
-  localStorage.setItem("ordensServico", JSON.stringify(lista));
-}
+// Carrega protocolos do Firestore
+async function carregarProtocolos(filtro = "Todos") {
+  try {
+    const querySnapshot = await getDocs(collection(db, "protocolos"));
+    lista.innerHTML = "";
 
-function buscarOS() {
-  const termo = document.getElementById("buscaProtocolo").value.trim();
-  const lista = JSON.parse(localStorage.getItem("ordensServico")) || [];
-  const encontrada = lista.find(os => os.protocolo === termo);
+    querySnapshot.forEach((docSnap) => {
+      const dados = docSnap.data();
 
-  listaOSDiv.innerHTML = "";
+      // Aplica filtro
+      if (filtro !== "Todos" && dados.status !== filtro) return;
 
-  if (!encontrada) {
-    listaOSDiv.innerHTML = "<p>OS não encontrada.</p>";
-    return;
+      const li = document.createElement("li");
+
+      // Cria dropdown de status e botão WhatsApp
+      li.innerHTML = `
+        <strong>${dados.protocolo}</strong> - 
+        <select id="status-${docSnap.id}">
+          <option value="Recebido" ${dados.status === "Recebido" ? "selected" : ""}>Recebido</option>
+          <option value="Em Andamento" ${dados.status === "Em Andamento" ? "selected" : ""}>Em Andamento</option>
+          <option value="Concluído" ${dados.status === "Concluído" ? "selected" : ""}>Concluído</option>
+        </select>
+        <button id="whatsapp-${docSnap.id}">Enviar WhatsApp</button>
+        <br>
+        Nome: ${dados.nome}<br>
+        WhatsApp: ${dados.whatsapp}<br>
+        Email: ${dados.email}<br>
+        Endereço: ${dados.endereco}<br>
+        Tipos de fita: ${dados.fitas.join(", ")}<br>
+        Quantidade: ${dados.quantidade}<br>
+        Condições: ${dados.condicoes}<br>
+        Criado em: ${dados.criadoEm?.toDate ? dados.criadoEm.toDate().toLocaleString() : "—"}
+      `;
+
+      // Adiciona classes para cores por status
+      if (dados.status === "Recebido") li.classList.add("recebido");
+      else if (dados.status === "Em Andamento") li.classList.add("em-andamento");
+      else if (dados.status === "Concluído") li.classList.add("concluido");
+
+      // Listener para dropdown de status
+      const selectStatus = li.querySelector("select");
+      selectStatus.addEventListener("change", () => {
+        atualizarStatus(docSnap.id, selectStatus.value);
+      });
+
+      // Listener para botão WhatsApp
+      const btnWhats = li.querySelector("button");
+      btnWhats.addEventListener("click", () => {
+        const msg = `Olá, ${dados.nome}! Seu protocolo ${dados.protocolo} está atualmente com status: ${selectStatus.value}.`;
+        const url = `https://wa.me/11921432425?text=${encodeURIComponent(msg)}`;
+
+        // Abrir em nova aba de forma segura
+        const win = window.open(url, "_blank", "noopener,noreferrer");
+        if (!win) {
+          alert("O popup do WhatsApp foi bloqueado. Libere o popup e tente novamente.");
+        }
+      });
+
+      lista.appendChild(li);
+    });
+
+  } catch (error) {
+    console.error("Erro ao carregar protocolos:", error);
+    lista.innerHTML = "<li>Erro ao carregar protocolos. Confira o console.</li>";
   }
-
-  const div = document.createElement("div");
-  div.style.border = "1px solid #ccc";
-  div.style.padding = "10px";
-
-  div.innerHTML = `
-    <strong>Protocolo:</strong> ${encontrada.protocolo}<br>
-    <strong>Cliente:</strong> ${encontrada.nome}<br>
-    <strong>WhatsApp:</strong> ${encontrada.whatsapp}<br>
-    <strong>Mídias:</strong> ${encontrada.midias.join(", ")}<br>
-    <strong>Quantidade:</strong> ${encontrada.quantidade}<br>
-    <strong>Condições:</strong> ${encontrada.condicoes}<br>
-    <strong>Status:</strong> ${encontrada.status}
-  `;
-
-  listaOSDiv.appendChild(div);
 }
 
-// carrega automaticamente
-carregarOS();
+// Carrega protocolos ao iniciar
+carregarProtocolos();
