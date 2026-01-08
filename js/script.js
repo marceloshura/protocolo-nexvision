@@ -52,18 +52,10 @@ form.addEventListener('submit', function(e) {
     form.style.display = 'none';
     confirmacao.style.display = 'block';
 
-    // Configura botão WhatsApp
+    // Configura botão WhatsApp com mensagem curta
     btnWhatsApp.onclick = function() {
         const mensagem = encodeURIComponent(
-            `Olá, estou enviando meu protocolo: ${protocolo}\n` +
-            `Nome: ${nome}\n` +
-            `WhatsApp: ${whatsapp}\n` +
-            `Email: ${email}\n` +
-            `Endereço: ${endereco}\n` +
-            `Complemento: ${complemento}\n` +
-            `Tipos de fita: ${fitas}\n` +
-            `Quantidade: ${quantidade}\n` +
-            `Condições: ${condicoes}`
+            `Olá, Nexvision. Acabei de preencher meu formulário e gerou o protocolo ${protocolo}.`
         );
         const numeroWhats = '11921432425'; // Alterar para seu número
         const url = `https://wa.me/${numeroWhats}?text=${mensagem}`;
