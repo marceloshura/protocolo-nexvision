@@ -1,60 +1,72 @@
-import { db } from "./firebase.js";
-import { collection, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+// Função para gerar um protocolo único (baseado em timestamp)
+function gerarProtocolo() {
+    const timestamp = Date.now();
+    return `NXV-${timestamp}`;
+}
 
-const form = document.getElementById("formProtocolo");
-const resultado = document.getElementById("resultado");
+// Captura elementos
+const form = document.getElementById('formProtocolo');
+const confirmacao = document.getElementById('confirmacao');
+const protocoloSpan = document.getElementById('protocoloGerado');
+const dadosConfirmacao = document.getElementById('dadosConfirmacao');
+const btnWhatsApp = document.getElementById('btnWhatsApp');
 
-form.addEventListener("submit", async (e) => {
-  e.preventDefault();
+form.addEventListener('submit', function(e) {
+    e.preventDefault(); // previne envio tradicional
 
-  // Pega valores do formulário
-  const nome = document.getElementById("nome").value.trim();
-  const whatsapp = document.getElementById("whatsapp").value.trim();
-  const email = document.getElementById("email").value.trim();
-  const endereco = document.getElementById("endereco").value.trim();
-  const quantidade = document.getElementById("quantidade").value;
-  const condicoes = document.getElementById("condicoes").value;
+    // Validação do WhatsApp: só números, mínimo 10, máximo 13
+    const whatsapp = document.getElementById('whatsapp').value.trim();
+    if (!/^\d{10,13}$/.test(whatsapp)) {
+        alert('Por favor, insira um WhatsApp válido (somente números, DDD + telefone).');
+        return;
+    }
 
-  // Pega fitas selecionadas
-  const fitas = Array.from(document.querySelectorAll('input[type="checkbox"]:checked')).map(cb => cb.value);
+    // Captura dados do formulário
+    const nome = document.getElementById('nome').value.trim();
+    const email = document.getElementById('email').value.trim();
+    const endereco = document.getElementById('endereco').value.trim();
+    const complemento = document.getElementById('complemento').value.trim();
+    const quantidade = document.getElementById('quantidade').value.trim();
+    const condicoes = document.getElementById('condicoes').value;
 
-  // Checagem mínima
-  if (!nome || !whatsapp || !email || !endereco || !quantidade || !condicoes || fitas.length === 0) {
-    resultado.innerText = "Preencha todos os campos corretamente.";
-    return;
-  }
+    const fitasNode = document.querySelectorAll('input[name="fitas"]:checked');
+    const fitas = Array.from(fitasNode).map(f => f.value).join(', ') || 'Não informado';
 
-  // Gera protocolo simples
-  const protocolo = "NX-" + new Date().getFullYear() + "-" + Math.floor(Math.random() * 9000 + 1000);
+    // Gera protocolo
+    const protocolo = gerarProtocolo();
 
-  try {
-    // Salva no Firestore
-    await addDoc(collection(db, "protocolos"), {
-      protocolo,
-      nome,
-      whatsapp,
-      email,
-      endereco,
-      fitas,
-      quantidade,
-      condicoes,
-      status: "Recebido",
-      criadoEm: serverTimestamp()
-    });
-
-    // Mostra resultado com link de WhatsApp
-    resultado.innerHTML = `
-      Protocolo gerado: <strong>${protocolo}</strong><br>
-      <a href="https://wa.me/${whatsapp}?text=Olá!%20Meu%20protocolo%20é%20${protocolo}" target="_blank">
-        Enviar via WhatsApp
-      </a>
+    // Preenche tela de confirmação
+    protocoloSpan.textContent = protocolo;
+    dadosConfirmacao.innerHTML = `
+        <li><strong>Nome:</strong> ${nome}</li>
+        <li><strong>WhatsApp:</strong> ${whatsapp}</li>
+        <li><strong>Email:</strong> ${email}</li>
+        <li><strong>Endereço:</strong> ${endereco}</li>
+        <li><strong>Complemento:</strong> ${complemento}</li>
+        <li><strong>Tipos de fita:</strong> ${fitas}</li>
+        <li><strong>Quantidade:</strong> ${quantidade}</li>
+        <li><strong>Condições:</strong> ${condicoes}</li>
     `;
 
-    // Limpa formulário
-    form.reset();
+    // Esconde formulário, mostra confirmação
+    form.style.display = 'none';
+    confirmacao.style.display = 'block';
 
-  } catch (error) {
-    console.error("Erro ao salvar protocolo:", error);
-    resultado.innerText = "Erro ao gerar protocolo. Confira o console.";
-  }
+    // Configura botão WhatsApp
+    btnWhatsApp.onclick = function() {
+        const mensagem = encodeURIComponent(
+            `Olá, estou enviando meu protocolo: ${protocolo}\n` +
+            `Nome: ${nome}\n` +
+            `WhatsApp: ${whatsapp}\n` +
+            `Email: ${email}\n` +
+            `Endereço: ${endereco}\n` +
+            `Complemento: ${complemento}\n` +
+            `Tipos de fita: ${fitas}\n` +
+            `Quantidade: ${quantidade}\n` +
+            `Condições: ${condicoes}`
+        );
+        const numeroWhats = '11921432425'; // Alterar para seu número
+        const url = `https://wa.me/${numeroWhats}?text=${mensagem}`;
+        window.open(url, '_blank');
+    };
 });

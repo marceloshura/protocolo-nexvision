@@ -17,7 +17,7 @@ body {
     padding: 20px;
 }
 
-/* Container do formulário */
+/* Container do formulário e confirmação */
 .container {
     background-color: #fff;
     padding: 25px 30px;
@@ -26,6 +26,7 @@ body {
     max-width: 500px;
     width: 100%;
     margin-top: 40px;
+    transition: all 0.3s ease;
 }
 
 /* Título */
@@ -50,7 +51,7 @@ label {
     color: #555;
 }
 
-/* Inputs e selects */
+/* Inputs, selects e textarea */
 input[type="text"],
 input[type="email"],
 input[type="number"],
@@ -105,7 +106,8 @@ textarea {
 }
 
 /* Botão principal */
-button#btnEnviar {
+button#btnEnviar,
+button#btnWhatsApp {
     padding: 12px;
     width: 100%;
     font-size: 18px;
@@ -118,9 +120,26 @@ button#btnEnviar {
     transition: all 0.2s ease;
 }
 
-button#btnEnviar:hover {
+button#btnEnviar:hover,
+button#btnWhatsApp:hover {
     background-color: #1ebe5d;
     transform: translateY(-2px);
+}
+
+/* Tela de confirmação */
+#confirmacao p {
+    margin-bottom: 10px;
+}
+
+#dadosConfirmacao {
+    list-style: none;
+    margin-bottom: 20px;
+}
+
+#dadosConfirmacao li {
+    margin-bottom: 5px;
+    font-size: 15px;
+    color: #444;
 }
 
 /* =========================== */
@@ -132,7 +151,8 @@ button#btnEnviar:hover {
         margin-top: 20px;
     }
 
-    button#btnEnviar {
+    button#btnEnviar,
+    button#btnWhatsApp {
         font-size: 16px;
         padding: 10px;
     }

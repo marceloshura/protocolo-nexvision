@@ -67,9 +67,19 @@
       </select>
     </div>
 
-    <button type="submit" id="btnEnviar">Enviar WhatsApp</button>
+    <!-- Botão principal: muda texto no mobile -->
+    <button type="submit" id="btnEnviar">Enviar formulário</button>
 
   </form>
+
+  <!-- Tela de confirmação (inicialmente escondida) -->
+  <div id="confirmacao" class="container" style="display:none;">
+    <h2>Formulário enviado!</h2>
+    <p>Seu protocolo: <span id="protocoloGerado"></span></p>
+    <p>Confira os dados preenchidos:</p>
+    <ul id="dadosConfirmacao"></ul>
+    <button id="btnWhatsApp">Enviar WhatsApp</button>
+  </div>
 
 </div>
 
