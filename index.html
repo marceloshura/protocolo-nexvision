@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <title>Cadastro de Serviço – Digitalização</title>
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+
+<div class="container">
+  <h1>Cadastro Inicial do Serviço</h1>
+
+  <!-- ETAPA 1 -->
+  <div class="step active">
+    <label>
+      Nome completo:
+      <input type="text" id="nome" />
+    </label>
+
+    <label>
+      WhatsApp <span class="hint">(DDD+Telefone)</span>
+      <input type="text" id="whatsapp" placeholder="11992109965" />
+    </label>
+
+    <button onclick="nextStep()">Próximo</button>
+  </div>
+
+  <!-- ETAPA 2 -->
+  <div class="step">
+    <label>
+      Endereço:
+      <input type="text" id="endereco" />
+    </label>
+
+    <label>
+      CEP (opcional):
+      <input type="text" id="cep" />
+    </label>
+
+    <label>
+      Complemento (casa, apartamento ou sem complemento):
+      <input type="text" id="complemento" />
+    </label>
+
+    <button onclick="prevStep()">Voltar</button>
+    <button onclick="nextStep()">Próximo</button>
+  </div>
+
+  <!-- ETAPA 3 -->
+  <div class="step">
+    <fieldset>
+      <legend>Tipo de mídia (marque todas que se aplicam):</legend>
+
+      <label><input type="checkbox" name="midia" value="VHS"> VHS</label>
+      <label><input type="checkbox" name="midia" value="VHS-C"> VHS-C</label>
+      <label><input type="checkbox" name="midia" value="MiniDV"> MiniDV</label>
+      <label><input type="checkbox" name="midia" value="Betacam"> Betacam</label>
+      <label><input type="checkbox" name="midia" value="DVD"> DVD</label>
+      <label><input type="checkbox" name="midia" value="Outro"> Outro</label>
+    </fieldset>
+
+    <label>
+      Quantidade de mídias:
+      <input type="number" id="quantidade" />
+    </label>
+
+    <label>
+      Condições das mídias:
+      <select id="condicoes">
+        <option value="">Selecione</option>
+        <option value="Boa">Boa</option>
+        <option value="Regular">Regular</option>
+        <option value="Ruim">Ruim</option>
+      </select>
+    </label>
+
+    <button onclick="prevStep()">Voltar</button>
+    <button onclick="finalizar()">Finalizar</button>
+  </div>
+
+  <!-- RESULTADO -->
+  <div class="step">
+    <h2>Cadastro concluído</h2>
+    <p id="resultado"></p>
+  </div>
+</div>
+
+<script src="js/script.js"></script>
+</body>
+</html>

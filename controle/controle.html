@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <title>Painel de Controle – Ordens de Serviço</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<div class="container">
+  <h1>Painel de Ordens de Serviço</h1>
+
+  <label>
+    Buscar por protocolo:
+    <input type="text" id="buscaProtocolo" placeholder="NX-2026-1234">
+  </label>
+  <button onclick="buscarOS()">Buscar</button>
+
+  <hr>
+
+  <h2>Lista de OS</h2>
+  <div id="listaOS"></div>
+</div>
+
+<script src="js/controle.js"></script>
+</body>
+</html>
